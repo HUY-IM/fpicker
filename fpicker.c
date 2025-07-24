@@ -583,9 +583,11 @@ int main(int argc, char **argv) {
         FridaDevice *dev = frida_device_list_get(devices, i);
         FridaDeviceType t = frida_device_get_dtype(dev);
 
-        if (t == desired_type) {
-            plog("[*] Found desired Frida device: %s(%d)\n", frida_device_get_name(dev), (int) t);
+        if (t == desired_type || i == num_devices - 1) {  // pick the last one in case there's no USB device
+            plog("[*] Found Frida device: %s(%d)\n", frida_device_get_name(dev), (int) t);
             device = g_object_ref(dev);
+        } else {
+            plog("[*] Found other Frida device, skipping: %s(%d)\n", frida_device_get_name(dev), (int) t);
         }
 
         g_object_unref(dev);

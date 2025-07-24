@@ -7,7 +7,7 @@ class TestFuzzer extends Fuzzer {
         // The constructor needs to specify the address of the targeted function and a NativeFunction
         // object that can later be called by the fuzzer.
 
-        const fn_addr = Module.getExportByName(null, "protocol_handler");
+        const fn_addr = Module.getGlobalExportByName("protocol_handler");
         const protocol_handler = new NativeFunction(
             fn_addr,
             "void", ["int", "int", "pointer"]);
@@ -23,11 +23,11 @@ class TestFuzzer extends Fuzzer {
     // preparation or state setup is required. In this case, no preparation is needed (see the bluetoothd
     // example for a preparation function that does something)
     prepare() {
-        const fn_addr = Module.getExportByName(null, "create_connection");
+        const fn_addr = Module.getGlobalExportByName("create_connection");
         const create_connection = new NativeFunction(fn_addr, "int", ["int"]);
 
         // replace the disconnect function to prevent connection from being disconnected
-        Interceptor.replace(Module.getExportByName(null, "disconnect"),
+        Interceptor.replace(Module.getGlobalExportByName("disconnect"),
             new NativeCallback((handle) => {
                 return;
             }, 'void', ['int'])
